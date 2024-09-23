@@ -26,5 +26,7 @@ https://github.com/user-attachments/assets/27fd420d-8538-440a-8d19-3524e1477205
 ## Links
 
 > **SMPL-Anthropometry Repository:** https://github.com/DavidBoja/SMPL-Anthropometry
+
 > **SMPL:** https://smpl-x.is.tue.mpg.de/
+
 > **Meshcapade:** https://meshcapade.com/
