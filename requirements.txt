@@ -1,0 +1,14 @@
+joblib
+numpy
+python-dateutil
+pandas
+pillow
+scikit-learn
+scipy
+seaborn
+smplx
+torch
+trimesh
+xgboost
+flask
+flask-cors
