@@ -49,14 +49,8 @@ def convert_measurements():
         as_attachment=True,
         download_name="mesh.glb",
     )
-    
-    
 
-
-
-    
     return {}
-
 
 
 if __name__ == "__main__":
