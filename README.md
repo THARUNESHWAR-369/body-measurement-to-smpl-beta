@@ -48,12 +48,17 @@ Important Note: SMPLX and the body creator software I used require licensing for
 What advancements in 3D human body modeling are you most excited about?
 
 
-
+<br/>
+<br/>
 
 
 ## Sample Demonstration
 
-https://github.com/user-attachments/assets/27fd420d-8538-440a-8d19-3524e1477205
+
+
+https://github.com/user-attachments/assets/73bd7014-aa89-41de-a501-5830fcf5046a
+
+
 
 
 ## Links
