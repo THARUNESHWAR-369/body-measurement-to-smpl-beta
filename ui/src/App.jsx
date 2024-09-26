@@ -80,24 +80,37 @@ function App() {
     { label: "Calf Circumference", name: "calfCircumference", min: 0, max: 39, step: 1 },
     { label: "Ankle Circumference", name: "ankleCircumference", min: 0, max: 27, step: 1 },
     { label: "Shoulder Breadth", name: "shoulderBreadth", min: 0, max: 39, step: 1 },
-    {label: "Weight", name: "weight", min: 0, max: 120, step: 1},
+    { label: "Weight", name: "weight", min: 0, max: 120, step: 1 },
   ];
 
   return (
     <div className="relative">
       <div className="p-5 absolute z-10">
-        {inputConfig.map(({ label, name, min, max, step }) => (
-          <InputGroup
-            key={name}
-            label={label}
-            name={name}
-            min={min}
-            max={max}
-            step={step}
-            value={parameters[name]}
-            onChange={handleInputChange}
-          />
-        ))}
+        <div>
+          {inputConfig.map(({ label, name, min, max, step }) => (
+            <InputGroup
+              key={name}
+              label={label}
+              name={name}
+              min={min}
+              max={max}
+              step={step}
+              value={parameters[name]}
+              onChange={handleInputChange}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="absolute right-0 w-fit  z-[1] h-full top-0 flex-wrap justify-center">
+
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val, index) => {
+          return (
+            <div key={index}>
+              <label htmlFor={`beta-${val}`} className="pr-5">Beta {val}: </label>
+              <input type="text" className="max-w-fit px-5" readOnly id={`beta-${val}`} value={0} />
+            </div>
+          );
+        })}
 
       </div>
       <div className='absolute top-0 w-full h-full'>

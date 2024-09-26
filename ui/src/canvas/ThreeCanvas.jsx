@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import axios from 'axios';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'; // Import GLTFLoader
 
-const ThreeCanvas = ({url}) => {
+const ThreeCanvas = ({ url }) => {
     const canvasContainerRef = useRef(null);
     const rendererRef = useRef(null);
     const sceneRef = useRef(null);
@@ -65,7 +65,7 @@ const ThreeCanvas = ({url}) => {
             controlsRef.current.update();
             rendererRef.current.render(sceneRef.current, cameraRef.current);
         };
-        
+
         animate();
 
         // Add lights
@@ -97,7 +97,7 @@ const ThreeCanvas = ({url}) => {
             rendererRef.current.dispose();
             material.dispose();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -125,7 +125,7 @@ const ThreeCanvas = ({url}) => {
 
     const getParam = () => {
         const sliders = document.querySelectorAll('.slider');
-        
+
         let params = {};
         sliders.forEach(slider => {
             params[slider.name] = parseFloat(slider.value);
@@ -135,14 +135,30 @@ const ThreeCanvas = ({url}) => {
 
 
     const updateBodyMesh = () => {
-        const params = getParam();
-        axios.post('http://127.0.0.1:5000/'+url, params, { responseType: 'arraybuffer' })
+        const params = getParam(); // Get slider parameters
+        axios.post('http://127.0.0.1:5000/' + url, params)
             .then(response => {
                 console.log(response.data)
-            
-                updateMesh(response.data);
-            }).catch(error => {
-                console.error("Error", error);
+                const { predicted_betas, mesh } = response.data;
+                console.log('Predicted Betas:', predicted_betas[0]);
+
+                // Decode the base64 mesh data
+                const byteCharacters = atob(mesh);  // Decode base64 string to binary string
+                const byteNumbers = new Array(byteCharacters.length).fill(null).map((_, i) => byteCharacters.charCodeAt(i));  // Convert binary string to byte numbers
+                const meshBinaryData = new Uint8Array(byteNumbers);  
+
+                predicted_betas[0].forEach((beta, index) => {
+                    const betaField = document.getElementById(`beta-${index + 1}`);
+                    if (betaField) {
+                        betaField.value = beta;
+                    }
+                });
+
+
+                updateMesh(meshBinaryData.buffer);  // Call updateMesh to update the 3D model in the scene
+            })
+            .catch(error => {
+                console.error("Error:", error);
             });
     };
 
@@ -159,7 +175,7 @@ const ThreeCanvas = ({url}) => {
             });
 
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return <div id="canvas-container" ref={canvasContainerRef} style={{ width: '100%', height: '100vh' }} />;
