@@ -1,25 +1,20 @@
-
-from flask import Flask, request, send_file
+import base64
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-
 import pandas as pd
 import io
-
 import torch
-import trimesh
-
 from lib.utils import predict_beta
 from lib.smplx import get_smplx_mesh
 
 app = Flask(__name__)
 CORS(app)
 
-
-@app.route("/api/convert-measurements", methods=["POST", "GET"])
-
+@app.route("/api/convert-measurements", methods=["POST"])
 def convert_measurements():
-
     data = request.json
+
+    # Extract data from the request and create DataFrame
     params = pd.DataFrame({
         "height": [data["height"]],
         "head circumference": [data["headCircumference"]],
@@ -38,20 +33,25 @@ def convert_measurements():
         "ankle left circumference": [data["ankleCircumference"]],
         "shoulder breadth": [data["shoulderBreadth"]],
         "weight": [data["weight"]],
-        "gender":"male",
+        "gender": "male"
     })
 
+    # Predict the betas using the model
     predicted_betas = predict_beta(params)
 
-    return send_file(
-        io.BytesIO(get_smplx_mesh(predicted_betas)),
-        mimetype="application/octet-stream",
-        as_attachment=True,
-        download_name="mesh.glb",
-    )
+    # Generate mesh using the predicted betas
+    mesh_binary_data = get_smplx_mesh(predicted_betas)
 
-    return {}
+    # Convert mesh binary data to base64
+    mesh_base64 = base64.b64encode(mesh_binary_data).decode('utf-8')
 
+    # Return both the predicted betas and the mesh as base64 encoded GLB file
+    response = {
+        "predicted_betas": predicted_betas.tolist(),  # Convert to JSON-serializable format
+        "mesh": mesh_base64  # Encode GLB file as base64 string
+    }
+
+    return jsonify(response)
 
 if __name__ == "__main__":
     app.run(debug=True)
