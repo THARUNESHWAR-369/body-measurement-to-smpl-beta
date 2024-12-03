@@ -14,7 +14,6 @@ def get_smplx_mesh(betas : torch.Tensor, format :str = 'glb') -> bytes:
     model = smplx_model(betas=betas)
 
     vertices = model.vertices.detach().numpy().squeeze()
-    print("Vertices: ", vertices)
     
     return trimesh.exchange.gltf.export_glb(
         trimesh.Trimesh(
